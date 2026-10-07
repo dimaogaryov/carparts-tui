@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+*.egg-info/
+.pytest_cache/
+# экспорт истории — личные данные
+carparts_*.md
+carparts_*.json

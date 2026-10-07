@@ -1,0 +1,194 @@
+/* Двойные рамки как в btop. Все цвета берутся из активной темы Textual
+   (по умолчанию isolation: чёрный фон, зелёный люминофор). */
+
+Screen {
+    background: $background;
+    color: $foreground;
+}
+
+.panel {
+    border: double $primary;
+    border-title-color: $background;
+    border-title-background: $primary;
+    border-title-style: bold;
+    border-subtitle-color: $foreground 55%;
+    border-subtitle-align: right;
+    background: $background;
+    padding: 0 1;
+}
+
+#logo {
+    width: 100%;
+    content-align: center middle;
+    text-align: center;
+    margin: 1 0;
+}
+
+#cars, #start {
+    width: 72;
+    height: auto;
+    max-height: 20;
+    margin: 0 0 0 4;
+}
+
+OptionList {
+    background: $background;
+    border: none;
+    color: $foreground;
+    height: auto;
+}
+
+OptionList > .option-list--option-highlighted {
+    background: $primary;
+    color: $background;
+    text-style: bold;
+}
+
+OptionList:focus > .option-list--option-highlighted {
+    background: $primary;
+    color: $background;
+}
+
+#topbar {
+    height: 1;
+    background: $panel;
+    padding: 0 1;
+}
+
+#body {
+    height: 1fr;
+}
+
+#parts-panel {
+    width: 1fr;
+}
+
+#side {
+    width: 44;
+}
+
+#history-panel {
+    height: 1fr;
+}
+
+#stats-panel {
+    height: auto;
+    min-height: 10;
+}
+
+/* ── модальные окна ── */
+
+ModalScreen {
+    align: center middle;
+    background: $background 70%;
+}
+
+.dialog {
+    width: 60;
+    height: auto;
+    max-height: 90%;
+    border: double $primary;
+    border-title-color: $background;
+    border-title-background: $primary;
+    border-title-style: bold;
+    background: $background;
+    padding: 0 2;
+    overflow-y: auto;
+    scrollbar-size-vertical: 1;
+    scrollbar-color: $primary 50%;
+    scrollbar-background: $background;
+}
+
+.dialog.alarm {
+    border: double $error;
+    border-title-background: $error;
+}
+
+.dialog Label {
+    color: $foreground 55%;
+}
+
+.dialog Input {
+    background: $background;
+    border: tall $primary 30%;
+    color: $foreground;
+}
+
+.dialog Input:focus {
+    border: tall $primary;
+}
+
+.pair {
+    height: auto;
+}
+
+.pair > Vertical {
+    height: auto;
+    width: 1fr;
+}
+
+.error {
+    color: $error;
+}
+
+/* кнопки прибиты к низу окна и не уходят за край при длинной форме */
+.buttons {
+    dock: bottom;
+    height: 3;
+    background: $background;
+    align-horizontal: right;
+}
+
+Button {
+    height: 3;
+    background: $background;
+    color: $foreground;
+    border: tall $primary 30%;
+    margin-left: 1;
+    min-width: 12;
+}
+
+Button:focus, Button:hover {
+    background: $primary;
+    color: $background;
+    border: tall $primary;
+}
+
+Footer {
+    background: $panel;
+}
+
+/* ── выбор машины: обводка вместо заливки ── */
+
+#cars ListView {
+    background: $background;
+    height: auto;
+}
+
+#cars ListItem {
+    background: $background;
+    border: blank;
+    padding: 0 1;
+    height: auto;
+}
+
+#cars ListView > ListItem.-highlight,
+#cars ListView:focus > ListItem.-highlight {
+    background: $background;
+    border: round $primary;
+}
+
+RadioSet {
+    background: $background;
+    border: tall $primary 30%;
+    width: 100%;
+}
+
+RadioSet:focus {
+    border: tall $primary;
+}
+
+#target {
+    width: 100%;
+    color: $foreground;
+}
