@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import os
+import sys
 from dataclasses import asdict, dataclass, field
 from datetime import date
 from pathlib import Path
@@ -13,14 +14,24 @@ SORT_MODES = ("life", "name", "date")
 LEVELS = ("expired", "crit", "warn", "ok", "off")
 
 
+def _app_dir(xdg_var: str, linux_default: str) -> Path:
+    """Папка приложения по правилам ОС; явно заданная XDG-переменная главнее везде."""
+    if xdg := os.environ.get(xdg_var):
+        return Path(xdg) / "carparts"
+    if sys.platform == "win32":
+        appdata = os.environ.get("APPDATA")
+        return (Path(appdata) if appdata else Path.home() / "AppData" / "Roaming") / "carparts"
+    if sys.platform == "darwin":
+        return Path.home() / "Library" / "Application Support" / "carparts"
+    return Path.home() / linux_default / "carparts"
+
+
 def data_path() -> Path:
-    base = os.environ.get("XDG_DATA_HOME") or Path.home() / ".local/share"
-    return Path(base) / "carparts" / "data.json"
+    return _app_dir("XDG_DATA_HOME", ".local/share") / "data.json"
 
 
 def config_path() -> Path:
-    base = os.environ.get("XDG_CONFIG_HOME") or Path.home() / ".config"
-    return Path(base) / "carparts" / "config.json"
+    return _app_dir("XDG_CONFIG_HOME", ".config") / "config.json"
 
 
 def load_config() -> dict:

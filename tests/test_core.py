@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+from pathlib import Path
 
 import pytest
 
@@ -172,3 +173,20 @@ def test_sorted_parts_modes():
     assert [p.name for p in car.sorted_parts(D0, by="life")] == ["б", "А", "в"]
     assert [p.name for p in car.sorted_parts(D0, by="name")] == ["А", "б", "в"]
     assert [p.name for p in car.sorted_parts(D0, by="date")] == ["А", "б", "в"]
+
+
+@pytest.mark.parametrize("platform, env, expected", [
+    ("linux", {}, "{home}/.local/share/carparts/data.json"),
+    ("darwin", {}, "{home}/Library/Application Support/carparts/data.json"),
+    ("win32", {"APPDATA": "{home}/AppData/Roaming"}, "{home}/AppData/Roaming/carparts/data.json"),
+    ("win32", {"XDG_DATA_HOME": "{home}/x"}, "{home}/x/carparts/data.json"),
+])
+def test_data_path_per_platform(monkeypatch, tmp_path, platform, env, expected):
+    from carparts import core
+    monkeypatch.setattr(core.sys, "platform", platform)
+    monkeypatch.setattr(core.Path, "home", lambda: tmp_path)
+    for var in ("XDG_DATA_HOME", "APPDATA"):
+        monkeypatch.delenv(var, raising=False)
+    for k, v in env.items():
+        monkeypatch.setenv(k, v.format(home=tmp_path))
+    assert core.data_path() == Path(expected.format(home=tmp_path))

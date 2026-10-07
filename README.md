@@ -23,14 +23,40 @@ TUI-приложение для контроля ресурса запчасте
 
 ## Install
 
-Requires Python 3.11+ and Linux (other platforms are untested).
+### Ready-made binaries (no Python needed)
+
+Download the file for your system from [Releases](https://github.com/dimaogaryov/carparts-tui/releases):
+
+| System | File |
+|---|---|
+| Windows 10/11 (x64) | `carparts-windows-x86_64.exe` |
+| macOS 12 Monterey or newer, Intel | `carparts-macos-intel` |
+| macOS 12 Monterey or newer, Apple Silicon (M1…) | `carparts-macos-arm64` |
+| Linux x86_64 (glibc 2.35+) | `carparts-linux-x86_64` |
+
+Run it from a terminal:
+
+- **Windows** — double-click or run from Windows Terminal. The binaries are unsigned,
+  so SmartScreen may warn: *More info → Run anyway*.
+- **macOS** — the binaries are unsigned; allow the first launch once:
+  ```sh
+  xattr -d com.apple.quarantine ~/Downloads/carparts-macos-intel
+  chmod +x ~/Downloads/carparts-macos-intel
+  ~/Downloads/carparts-macos-intel
+  ```
+  Terminal.app shows 256 colours; iTerm2 / WezTerm / Ghostty show the full palette.
+- **Linux** — `chmod +x carparts-linux-x86_64 && ./carparts-linux-x86_64`
+
+### From source
+
+Requires Python 3.11+.
 
 ```sh
 git clone https://github.com/dimaogaryov/carparts-tui.git
 cd carparts-tui
 python -m venv .venv
-.venv/bin/pip install -e .
-.venv/bin/carparts
+.venv/bin/pip install -e .          # Windows: .venv\Scripts\pip install -e .
+.venv/bin/carparts                  # Windows: .venv\Scripts\carparts
 ```
 
 ## Keys
@@ -55,8 +81,13 @@ In dialogs: `←→` / `hl` switch buttons, `↑↓` move between fields, `Esc` 
 
 ## Data
 
-- Cars and history: `$XDG_DATA_HOME/carparts/data.json` (`~/.local/share/carparts/data.json`)
-- Settings (language, theme, sort): `$XDG_CONFIG_HOME/carparts/config.json`
+| System | Cars and history, settings |
+|---|---|
+| Linux | `~/.local/share/carparts/data.json`, `~/.config/carparts/config.json` (XDG) |
+| macOS | `~/Library/Application Support/carparts/` |
+| Windows | `%APPDATA%\carparts\` |
+
+`XDG_DATA_HOME` / `XDG_CONFIG_HOME`, when set, take priority on every system.
 
 ## Development
 
@@ -64,6 +95,11 @@ In dialogs: `←→` / `hl` switch buttons, `↑↓` move between fields, `Esc` 
 .venv/bin/pip install -e '.[dev]'
 .venv/bin/pytest
 ```
+
+Binaries are built by GitHub Actions (`.github/workflows/build.yml`) on Linux, Windows,
+macOS Intel and macOS Apple Silicon; every build runs a headless self-test, and macOS
+builds are checked to require no newer than macOS 12. Pushing a `v*` tag publishes a release.
+Local build: `pip install . pyinstaller && python packaging/build.py`.
 
 ## License
 

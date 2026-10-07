@@ -5,3 +5,6 @@ __pycache__/
 # экспорт истории — личные данные
 carparts_*.md
 carparts_*.json
+build/
+dist/
+*.spec

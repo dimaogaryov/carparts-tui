@@ -1085,7 +1085,49 @@ class CarPartsApp(Localized, App):
         self.push_screen(MileageModal(self.car), done)
 
 
+def self_test() -> int:
+    """Запуск без терминала на временных данных: проверка собранного бинарника."""
+    import os
+    import tempfile
+
+    with tempfile.TemporaryDirectory() as tmp:
+        os.environ["XDG_DATA_HOME"] = os.environ["XDG_CONFIG_HOME"] = tmp
+        car = Car("Test", "Car", 2020, 1.6, odometer=10_000)
+        car.replace_part("Engine oil", interval_km=8000, km=10_000)
+        core.save([car])
+        core.save_config({"lang": "ru"})
+        reached = []
+
+        async def pilot(p) -> None:
+            await p.pause()
+            await p.press("enter", "enter")         # машина → дашборд
+            await p.pause()
+            reached.append(type(p.app.screen).__name__)
+            p.app.exit()
+
+        CarPartsApp().run(headless=True, auto_pilot=pilot, size=(120, 40))
+    ok = reached == ["Dashboard"]
+    print("self-test:", "ok" if ok else f"FAILED {reached}")
+    return 0 if ok else 1
+
+
 def main() -> None:
+    import argparse
+    import sys
+    from importlib.metadata import PackageNotFoundError, version
+
+    parser = argparse.ArgumentParser(prog="carparts")
+    parser.add_argument("--version", action="store_true", help="print version and exit")
+    parser.add_argument("--self-test", action="store_true", help=argparse.SUPPRESS)
+    args = parser.parse_args()
+    if args.version:
+        try:
+            print("carparts", version("carparts"))
+        except PackageNotFoundError:
+            print("carparts", "unknown")
+        return
+    if args.self_test:
+        sys.exit(self_test())
     CarPartsApp().run()
 
 
