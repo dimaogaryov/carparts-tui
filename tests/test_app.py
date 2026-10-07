@@ -136,7 +136,7 @@ def test_replace_and_quick_mileage_and_export(tmp_path):
             await pilot.press("tab", "enter")       # Markdown по умолчанию
             await pilot.pause()
             md = next(tmp_path.glob("carparts_lada_vesta_*.md"))
-            assert "| Антифриз |" in md.read_text()
+            assert "| Антифриз |" in md.read_text(encoding="utf-8")
     asyncio.run(run())
 
 
@@ -286,7 +286,7 @@ def test_history_chords_export_json_and_clear(tmp_path):
             app.screen.query_one("#dir").value = str(tmp_path / "exp")
             await pilot.press("tab", "enter")
             await pilot.pause()
-            data = json.loads(next((tmp_path / "exp").glob("*.json")).read_text())
+            data = json.loads(next((tmp_path / "exp").glob("*.json")).read_text(encoding="utf-8"))
             assert data["car"]["brand"] == "Lada" and data["history"][0]["km"] == 100_100
 
             await pilot.press("h", "c", "n")        # h+c → подтверждение → нет
