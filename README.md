@@ -1,7 +1,6 @@
 # CarParts TUI
 
-Terminal app for tracking the service life of car parts and consumables, styled after
-[btop](https://github.com/aristocratos/btop) and the retro terminals of *Alien: Isolation*.
+Terminal app for tracking the service life of car parts and consumables, styled after retro terminals 
 
 TUI-приложение для контроля ресурса запчастей и расходников автомобиля. English and Russian UI.
 
